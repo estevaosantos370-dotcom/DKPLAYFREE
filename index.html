@@ -3,19 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0a0f18">
+<meta name="theme-color" content="#000000">
 <title>Dark Play - Ao Vivo</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
   --red: #ff0000;
-  --blue: #2563eb;
-  --bg: #0a0f18;
-  --card: #151b2b;
-  --border: #1e293b;
-  --muted: #94a3b8;
-  --text: #f8fafc;
+  --bg: #000;
+  --card: #111;
+  --border: #222;
+  --muted: #888;
+  --text: #fff;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,23 +34,23 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 25px;
-  padding: 15px 0;
+  margin-bottom: 20px;
+  padding: 10px 0;
   border-bottom: 1px solid var(--border);
   flex-wrap: wrap;
   gap: 15px;
 }
-.logo { font-size: 26px; font-weight: 900; font-style: italic; letter-spacing: -0.5px; }
+.logo { font-size: 24px; font-weight: 900; font-style: italic; }
 .logo .r { color: var(--red); }
 .logo .w { color: #fff; }
-.user { font-size: 12px; color: var(--muted); padding: 6px 14px; background: var(--card); border-radius: 20px; border: 1px solid var(--border); }
+.user { font-size: 12px; color: var(--muted); padding: 5px 12px; background: var(--card); border-radius: 20px; }
 
-/* Jogos Ao Vivo (Carrossel) */
+/* Jogos Ao Vivo */
 .section-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 .section-header::before {
   content: '';
@@ -62,37 +61,38 @@ header {
   border-radius: 2px;
 }
 .section-header h2 { font-size: 18px; color: #fff; }
-.section-header span { color: var(--muted); font-size: 14px; font-weight: normal; }
+.section-header span { color: var(--muted); font-size: 14px; }
 
 .games-carousel {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   overflow-x: auto;
   padding-bottom: 15px;
-  margin-bottom: 25px;
-  scrollbar-width: none; /* Firefox */
+  margin-bottom: 20px;
+  scrollbar-width: none;
 }
-.games-carousel::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+.games-carousel::-webkit-scrollbar { display: none; }
 
 .game-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
   min-width: 260px;
-  display: flex;
-  flex-direction: column;
+  flex-shrink: 0;
   overflow: hidden;
   transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
 }
-.game-card:hover { transform: translateY(-2px); border-color: #334155; }
+.game-card:hover { transform: translateY(-2px); border-color: #333; }
 
 .game-info {
-  padding: 12px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 11px;
   border-bottom: 1px solid var(--border);
 }
 .game-info i { color: var(--muted); }
@@ -101,128 +101,138 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 15px;
+  padding: 15px 12px;
 }
-.team { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+.team { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
 .team img { width: 40px; height: 40px; object-fit: contain; }
-.team span { font-size: 13px; font-weight: 600; text-align: center; }
-.game-vs { color: var(--muted); font-size: 12px; font-weight: bold; }
+.team span { font-size: 12px; font-weight: 600; text-align: center; line-height: 1.2; }
+.game-vs { color: var(--muted); font-size: 12px; font-weight: bold; padding: 0 8px; text-align: center;}
+
+.game-channel-info {
+  text-align: center;
+  font-size: 11px;
+  color: #ffdfa6;
+  background: #241c14;
+  padding: 6px;
+  border-radius: 4px;
+  margin: 0 12px 10px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .game-btn {
-  background: var(--blue);
+  background: var(--red);
   color: #fff;
   border: none;
   padding: 12px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   transition: background 0.2s;
+  margin-top: auto;
 }
-.game-btn:hover { background: #1d4ed8; }
+.game-btn:hover { background: #cc0000; }
 
-/* Player Area */
+/* Player */
 .player-wrap {
   background: #000;
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   border: 1px solid var(--border);
   scroll-margin-top: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .player-head {
   background: var(--card);
-  padding: 12px 20px;
+  padding: 10px 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border);
 }
-.current-name { color: #fff; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 10px; }
-.live-badge { background: var(--red); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; animation: pulse 2s infinite; }
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
+.current-name { color: #fff; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+.live-badge { background: var(--red); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
 .refresh-btn {
   background: transparent;
   color: var(--muted);
   border: 1px solid var(--border);
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
-.refresh-btn:hover { background: #1e293b; color: #fff; }
+.refresh-btn:hover { background: #222; color: #fff; }
 
 .player-container { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
 .player-container iframe { width: 100% !important; height: 100% !important; border: 0; display: block; }
-.player-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: #334155; font-size: 15px; flex-direction: column; gap: 10px; }
+.player-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: #333; font-size: 14px; flex-direction: column; gap: 8px; }
 
-/* Canais Grid */
-.channels-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+/* Canais */
+.channels-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .channels-head h2 { font-size: 18px; }
 .channels-head h2 span { color: var(--red); }
 .channels-head .count { color: var(--muted); font-size: 13px; }
 
 .search-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 6px;
   color: #fff;
   font-size: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
-.search-input:focus { outline: none; border-color: var(--blue); }
+.search-input:focus { outline: none; border-color: var(--red); }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 15px; margin-bottom: 40px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 12px; margin-bottom: 40px; }
 .card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
   transition: 0.2s;
-  position: relative;
 }
-.card:hover { border-color: var(--blue); transform: translateY(-2px); }
-.card.active { border: 2px solid var(--blue); }
-.card-img { aspect-ratio: 1/1; background: #1e293b; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.card-img i { font-size: 36px; color: #334155; }
-.lock-badge { position: absolute; top: 8px; right: 8px; background: #FFC107; color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 2; }
-.card-info { padding: 12px; text-align: center; }
-.card-name { font-weight: bold; font-size: 13px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-cat { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
+.card:hover { border-color: var(--red); transform: translateY(-2px); }
+.card.active { border: 2px solid var(--red); }
+.card-img { aspect-ratio: 1/1; background: #1a1a1a; display: flex; align-items: center; justify-content: center; position: relative; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; }
+.card-img i { font-size: 32px; color: #333; }
+.lock-badge { position: absolute; top: 6px; right: 6px; background: #FFC107; color: #000; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+.card-info { padding: 10px; text-align: center; }
+.card-name { font-weight: bold; font-size: 12px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-cat { color: var(--muted); font-size: 10px; }
 
-.empty { grid-column: 1/-1; text-align: center; padding: 50px; color: var(--muted); background: var(--card); border-radius: 10px; }
-.loading { grid-column: 1/-1; text-align: center; padding: 30px; color: var(--muted); }
+.empty { grid-column: 1/-1; text-align: center; padding: 40px; color: var(--muted); background: var(--card); border-radius: 8px; }
+.loading { grid-column: 1/-1; text-align: center; padding: 20px; color: var(--muted); }
 
 /* Modal Parental */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.95); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
 .modal.show { display: flex; }
-.modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; width: 100%; max-width: 350px; text-align: center; }
-.modal-box h3 { color: #fff; margin-bottom: 10px; }
+.modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 25px; width: 100%; max-width: 350px; text-align: center; }
+.modal-box h3 { color: #fff; margin-bottom: 8px; }
 .modal-box p { color: var(--muted); font-size: 13px; margin-bottom: 15px; }
-.modal-box input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid var(--border); color: #fff; border-radius: 6px; margin-bottom: 12px; font-size: 15px; text-align: center; }
-.modal-box input:focus { outline: none; border-color: var(--blue); }
-.modal-box button { width: 100%; padding: 12px; border: 0; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 8px; }
-.modal-box .primary { background: var(--blue); color: #fff; }
-.modal-box .cancel { background: #334155; color: #fff; }
-.error { color: #ef4444; font-size: 12px; margin-top: 8px; display: none; }
+.modal-box input { width: 100%; padding: 10px; background: #222; border: 1px solid var(--border); color: #fff; border-radius: 4px; margin-bottom: 10px; font-size: 15px; text-align: center; }
+.modal-box input:focus { outline: none; border-color: var(--red); }
+.modal-box button { width: 100%; padding: 10px; border: 0; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 6px; }
+.modal-box .primary { background: var(--red); color: #fff; }
+.modal-box .cancel { background: #333; color: #fff; }
+.error { color: #ff4444; font-size: 12px; margin-top: 6px; display: none; }
 
-.footer { background: var(--card); border-top: 1px solid var(--border); padding: 25px; text-align: center; color: var(--muted); font-size: 12px; margin-top: auto; }
+.footer { background: var(--card); border-top: 1px solid var(--border); padding: 20px; text-align: center; color: #666; font-size: 12px; margin-top: auto; }
 
 @media(max-width: 600px) {
-  .grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 10px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 8px; }
   .game-card { min-width: 220px; }
 }
 </style>
@@ -234,7 +244,7 @@ header {
     <div class="user"><i class="fas fa-user"></i> <span id="userName">Visitante</span></div>
   </header>
 
-  <!-- Jogos Ao Vivo (Preenchido dinamicamente pelos canais) -->
+  <!-- Jogos Ao Vivo -->
   <div id="gamesSection" style="display:none;">
     <div class="section-header">
       <h2>Jogos Ao Vivo</h2> <span id="gamesCount">(0)</span>
@@ -242,9 +252,7 @@ header {
     <div class="games-carousel" id="gamesCarousel"></div>
   </div>
 
-  <div class="search-input-container">
-    <input type="text" class="search-input" id="search" placeholder="🔍 Buscar canal..." oninput="renderGrid()">
-  </div>
+  <input type="text" class="search-input" id="search" placeholder="🔍 Buscar canal..." oninput="renderGrid()">
 
   <!-- Player -->
   <div class="player-wrap" id="playerWrap">
@@ -292,10 +300,10 @@ header {
 <script>
 const UNLOCK_KEY = 'darkplay_unlocked';
 let channels = [];
+let jogosAoVivo = [];
 let currentIndex = -1;
 let pendingChannel = null;
 
-// Funções Utilitárias
 function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -307,74 +315,146 @@ function getUnlocked() { try { return JSON.parse(localStorage.getItem(UNLOCK_KEY
 function saveUnlocked(a) { localStorage.setItem(UNLOCK_KEY, JSON.stringify(a)); }
 function isUnlocked(id) { return getUnlocked().includes(id); }
 
-// ID do usuário
 let uid = localStorage.getItem('darkplay_user');
 if (!uid) { uid = 'user_' + Math.random().toString(36).slice(2, 8); localStorage.setItem('darkplay_user', uid); }
 document.getElementById('userName').textContent = uid;
 
-// Carregar Canais
+// Normaliza nome para matching
+function normalizeName(name) {
+  return String(name || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
+    .replace(/\b(hd|fhd|uhd|4k|sd|h265|hevc)\b/g, '') // remove tags de qualidade
+    .replace(/[^a-z0-9 ]/g, '') // remove pontuação
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Encontra o canal do catálogo que corresponde ao nome vindo da API
+function findCanalByName(apiName) {
+  const norm = normalizeName(apiName);
+  if (!norm) return null;
+
+  // 1. Match exato após normalização
+  let found = channels.find(c => normalizeName(c.nome) === norm);
+  if (found) return found;
+
+  // 2. Match parcial (um contém o outro)
+  found = channels.find(c => {
+    const cn = normalizeName(c.nome);
+    return cn.includes(norm) || norm.includes(cn);
+  });
+  if (found) return found;
+
+  // 3. Similaridade simples (Jaccard)
+  let best = null, bestScore = 0;
+  for (const c of channels) {
+    const cn = normalizeName(c.nome);
+    const score = similarity(norm, cn);
+    if (score > bestScore) { bestScore = score; best = c; }
+  }
+  return bestScore > 0.6 ? best : null; // limiar de 60%
+}
+
+function similarity(a, b) {
+  const setA = new Set(a.split(' '));
+  const setB = new Set(b.split(' '));
+  const inter = new Set([...setA].filter(x => setB.has(x)));
+  const union = new Set([...setA, ...setB]);
+  return inter.size / union.size;
+}
+
 async function loadChannels() {
   try {
     const res = await fetch('/api/canais', { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     channels = Array.isArray(data.canais) ? data.canais : [];
-    
-    renderGames(); // Preenche a seção "Jogos Ao Vivo"
-    renderGrid();  // Preenche a lista de canais
-    
-    // Auto-play do primeiro canal se existir
+    renderGrid();
     if (channels.length > 0 && currentIndex === -1) {
-      setTimeout(() => playChannel(0, false), 500); // false = não scroll imediato para não assustar
+      setTimeout(() => playChannel(0, false), 500);
     }
   } catch (e) {
     document.getElementById('grid').innerHTML = '<div class="empty"><i class="fas fa-exclamation-triangle"></i><p>Erro: ' + escapeHtml(e.message) + '</p></div>';
   }
 }
 
-// Renderizar a seção de "Jogos Ao Vivo" (usa os canais como base)
+async function loadJogosAoVivo() {
+  try {
+    const res = await fetch('/api/jogos-ao-vivo', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    let todosJogos = Array.isArray(data.jogos) ? data.jogos : [];
+
+    // FILTRO INTELIGENTE: Só mantém jogos onde o canal existe na grade
+    let jogosValidos = [];
+    
+    for (const jogo of todosJogos) {
+      let canalEncontrado = null;
+      
+      // Testa todos os canais que estão passando o jogo (ex: ["ESPN", "SPORTV"])
+      for (const nomeCanal of jogo.canais) {
+        canalEncontrado = findCanalByName(nomeCanal);
+        if (canalEncontrado) break; // Se achou um, para de procurar
+      }
+
+      // Se achou um canal que existe na sua grade, adiciona o jogo à lista
+      if (canalEncontrado) {
+        jogo.canalVinculado = canalEncontrado; // Salva para mostrar no card
+        jogo.canalIndex = channels.indexOf(canalEncontrado); // Salva o index para o botão clicar
+        jogosValidos.push(jogo);
+      }
+    }
+
+    jogosAoVivo = jogosValidos;
+    renderGames();
+  } catch (e) {
+    console.warn('Jogos ao vivo indisponíveis:', e.message);
+    document.getElementById('gamesSection').style.display = 'none';
+  }
+}
+
 function renderGames() {
   const section = document.getElementById('gamesSection');
   const carousel = document.getElementById('gamesCarousel');
-  
-  if (!channels.length) { section.style.display = 'none'; return; }
 
-  // Filtra canais de esporte, se não tiver, pega os 5 primeiros
-  let gamesList = channels.filter(c => (c.categoria || '').toLowerCase().includes('esporte') || (c.categoria || '').toLowerCase().includes('jogo'));
-  if (gamesList.length === 0) gamesList = channels.slice(0, 5);
+  if (!jogosAoVivo.length) { section.style.display = 'none'; return; }
 
-  document.getElementById('gamesCount').textContent = `(${gamesList.length})`;
-  
-  carousel.innerHTML = gamesList.map((c, i) => {
-    // Como não temos API de times, geramos um layout visual simulando o da sua imagem
-    const teamA = c.nome.split(' ')[0] || 'Time A';
-    const teamB = c.nome.split(' ')[1] || 'Time B';
-    
+  document.getElementById('gamesCount').textContent = `(${jogosAoVivo.length})`;
+
+  carousel.innerHTML = jogosAoVivo.map(jogo => {
     return `
-      <div class="game-card" onclick="selectChannel(${channels.indexOf(c)})">
+      <div class="game-card">
         <div class="game-info">
-          <i class="fas fa-clock"></i> Hoje · 18:45 &nbsp;|&nbsp; <i class="fas fa-trophy"></i> ${escapeHtml(c.categoria || 'Campeonato')}
+          <i class="fas fa-clock"></i> ${escapeHtml(jogo.hora)} &nbsp;|&nbsp; <i class="fas fa-trophy"></i> ${escapeHtml(jogo.liga)}
         </div>
         <div class="game-teams">
           <div class="team">
-            <div style="width:40px;height:40px;background:#334155;border-radius:50%;display:flex;align-items:center;justify-content:center;"><i class="fas fa-shield-alt" style="color:#fff"></i></div>
-            <span>${escapeHtml(teamA)}</span>
+            ${jogo.logoCasa ? `<img src="${escapeHtml(jogo.logoCasa)}" alt="" onerror="this.style.display='none'">` : '<i class="fas fa-shield-alt" style="font-size:24px;color:#333"></i>'}
+            <span>${escapeHtml(jogo.timeCasa)}</span>
           </div>
-          <div class="game-vs">VS</div>
+          <div class="game-vs">
+            ${jogo.placarCasa !== null && jogo.placarFora !== null ? `${jogo.placarCasa} - ${jogo.placarFora}` : 'VS'}
+            ${jogo.minuto ? `<br><small style="color:var(--red)">${escapeHtml(jogo.minuto)}</small>` : ''}
+          </div>
           <div class="team">
-            <div style="width:40px;height:40px;background:#334155;border-radius:50%;display:flex;align-items:center;justify-content:center;"><i class="fas fa-shield-alt" style="color:#fff"></i></div>
-            <span>${escapeHtml(teamB)}</span>
+            ${jogo.logoFora ? `<img src="${escapeHtml(jogo.logoFora)}" alt="" onerror="this.style.display='none'">` : '<i class="fas fa-shield-alt" style="font-size:24px;color:#333"></i>'}
+            <span>${escapeHtml(jogo.timeFora)}</span>
           </div>
         </div>
-        <button class="game-btn"><i class="fas fa-play"></i> ASSISTIR</button>
+        <div class="game-channel-info">
+          <i class="fas fa-tv"></i> Passando no canal: <b>${escapeHtml(jogo.canalVinculado.nome)}</b>
+        </div>
+        <button class="game-btn" onclick="selectChannel(${jogo.canalIndex})">
+          <i class="fas fa-play"></i> ASSISTIR
+        </button>
       </div>
     `;
   }).join('');
-  
+
   section.style.display = 'block';
 }
 
-// Renderizar Grid de Canais
 function renderGrid() {
   const grid = document.getElementById('grid');
   const search = document.getElementById('search').value.toLowerCase().trim();
@@ -409,11 +489,9 @@ function renderGrid() {
   }).join('');
 }
 
-// Selecionar Canal (verifica parental e vai pro player)
 function selectChannel(idx) {
   if (idx < 0 || idx >= channels.length) return;
   const ch = channels[idx];
-  
   if (ch.parental === true && !isUnlocked(ch.id)) {
     pendingChannel = idx;
     document.getElementById('parentalPassword').value = '';
@@ -422,51 +500,36 @@ function selectChannel(idx) {
     setTimeout(() => document.getElementById('parentalPassword').focus(), 50);
     return;
   }
-  playChannel(idx, true); // true = fazer scroll suave até o player
+  playChannel(idx, true);
 }
 
-// Tocar Canal
 function playChannel(idx, scroll = true) {
   const ch = channels[idx];
   if (!ch) return;
-  
   currentIndex = idx;
   document.getElementById('currentName').textContent = ch.nome || 'Canal';
-  
-  // Injeta o iframe
   document.getElementById('player').innerHTML = ch.iframe || '<div class="player-empty">Canal sem embed configurado</div>';
-  
-  // Atualiza classes visuais
   document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
   const active = document.querySelector(`.card[data-idx="${idx}"]`);
   if (active) active.classList.add('active');
-  
-  // Rola suavemente para o player
-  if (scroll) {
-    document.getElementById('playerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  if (scroll) document.getElementById('playerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Recarregar o iframe manualmente (botão de refresh no player)
 function reloadPlayer() {
-  if (currentIndex !== -1) {
-    playChannel(currentIndex, false);
-  }
+  if (currentIndex !== -1) playChannel(currentIndex, false);
 }
 
-// Lógica Parental
 function checkParental() {
   if (pendingChannel === null) return;
   const ch = channels[pendingChannel];
   const pwd = document.getElementById('parentalPassword').value;
-  
   if (pwd === (ch.parental_senha || '')) {
     const u = getUnlocked();
     if (!u.includes(ch.id)) u.push(ch.id);
     saveUnlocked(u);
     const idx = pendingChannel;
     closeParental();
-    playChannel(idx, true); // toca e rola
+    playChannel(idx, true);
   } else {
     document.getElementById('parentalError').style.display = 'block';
     document.getElementById('parentalPassword').value = '';
@@ -479,14 +542,13 @@ function closeParental() {
   pendingChannel = null;
 }
 
-// Eventos
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeParental(); });
 document.getElementById('parentalModal').addEventListener('click', e => {
   if (e.target.id === 'parentalModal') closeParental();
 });
 
-// Iniciar
-loadChannels();
+// Inicializar
+loadChannels().then(() => loadJogosAoVivo());
 </script>
 </body>
 </html>
