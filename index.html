@@ -94,8 +94,11 @@ header {
   color: var(--muted);
   font-size: 11px;
   border-bottom: 1px solid var(--border);
+  justify-content: space-between;
 }
 .game-info i { color: var(--muted); }
+.game-info .live-tag { color: var(--red); font-weight: bold; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
 .game-teams {
   display: flex;
@@ -247,7 +250,7 @@ header {
   <!-- Jogos Ao Vivo -->
   <div id="gamesSection" style="display:none;">
     <div class="section-header">
-      <h2>Jogos Ao Vivo</h2> <span id="gamesCount">(0)</span>
+      <h2>Jogos de Hoje</h2> <span id="gamesCount">(0)</span>
     </div>
     <div class="games-carousel" id="gamesCarousel"></div>
   </div>
@@ -353,7 +356,7 @@ function findCanalByName(apiName) {
     const score = similarity(norm, cn);
     if (score > bestScore) { bestScore = score; best = c; }
   }
-  return bestScore > 0.6 ? best : null; // limiar de 60%
+  return bestScore > 0.5 ? best : null; // Limiar de 50%
 }
 
 function similarity(a, b) {
@@ -386,23 +389,42 @@ async function loadJogosAoVivo() {
     const data = await res.json();
     let todosJogos = Array.isArray(data.jogos) ? data.jogos : [];
 
-    // FILTRO INTELIGENTE: Só mantém jogos onde o canal existe na grade
     let jogosValidos = [];
     
+    // Filtra os jogos: Só exibe se algum dos canais do jogo existir na grade
     for (const jogo of todosJogos) {
       let canalEncontrado = null;
+      let nomeCanalEncontrado = '';
       
-      // Testa todos os canais que estão passando o jogo (ex: ["ESPN", "SPORTV"])
-      for (const nomeCanal of jogo.canais) {
-        canalEncontrado = findCanalByName(nomeCanal);
-        if (canalEncontrado) break; // Se achou um, para de procurar
+      // A API manda canais juntos (ex: "Record News · YouTube")
+      // Vamos separar por '·', '|' ou ',' e testar um por um
+      const canaisBrutos = jogo.canais || [];
+      const canaisSeparados = [];
+      
+      for (const c of canaisBrutos) {
+         const partes = c.split(/[·|,]/);
+         for (const p of partes) {
+            if (p.trim()) canaisSeparados.push(p.trim());
+         }
       }
 
-      // Se achou um canal que existe na sua grade, adiciona o jogo à lista
+      // Testa cada canal separado
+      for (const nomeCanal of canaisSeparados) {
+        canalEncontrado = findCanalByName(nomeCanal);
+        if (canalEncontrado) {
+          nomeCanalEncontrado = nomeCanal;
+          break; // Se achou um, para de procurar
+        }
+      }
+
       if (canalEncontrado) {
-        jogo.canalVinculado = canalEncontrado; // Salva para mostrar no card
-        jogo.canalIndex = channels.indexOf(canalEncontrado); // Salva o index para o botão clicar
+        jogo.canalVinculado = canalEncontrado;
+        jogo.canalIndex = channels.indexOf(canalEncontrado);
+        jogo.canalNomeExibicao = nomeCanalEncontrado;
         jogosValidos.push(jogo);
+      } else {
+        // Log para você ver no F12 quais canais não foram encontrados
+        console.log(`[Jogo Ocultado] ${jogo.timeCasa} x ${jogo.timeFora} - Nenhum dos canais (${canaisSeparados.join(', ')}) está na sua grade.`);
       }
     }
 
@@ -423,10 +445,16 @@ function renderGames() {
   document.getElementById('gamesCount').textContent = `(${jogosAoVivo.length})`;
 
   carousel.innerHTML = jogosAoVivo.map(jogo => {
+    // Se estiver ao vivo, mostra o minuto, se não, mostra o horário
+    const infoStatus = jogo.status === 'ao_vivo' 
+      ? `<span class="live-tag"><i class="fas fa-circle"></i> ${escapeHtml(jogo.minuto)}</span>` 
+      : `<span><i class="fas fa-clock"></i> ${escapeHtml(jogo.hora)}</span>`;
+
     return `
       <div class="game-card">
         <div class="game-info">
-          <i class="fas fa-clock"></i> ${escapeHtml(jogo.hora)} &nbsp;|&nbsp; <i class="fas fa-trophy"></i> ${escapeHtml(jogo.liga)}
+          <div>${infoStatus}</div>
+          <div><i class="fas fa-trophy"></i> ${escapeHtml(jogo.liga)}</div>
         </div>
         <div class="game-teams">
           <div class="team">
@@ -435,7 +463,6 @@ function renderGames() {
           </div>
           <div class="game-vs">
             ${jogo.placarCasa !== null && jogo.placarFora !== null ? `${jogo.placarCasa} - ${jogo.placarFora}` : 'VS'}
-            ${jogo.minuto ? `<br><small style="color:var(--red)">${escapeHtml(jogo.minuto)}</small>` : ''}
           </div>
           <div class="team">
             ${jogo.logoFora ? `<img src="${escapeHtml(jogo.logoFora)}" alt="" onerror="this.style.display='none'">` : '<i class="fas fa-shield-alt" style="font-size:24px;color:#333"></i>'}
