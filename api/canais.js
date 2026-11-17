@@ -6,13 +6,14 @@ function newId() {
 }
 
 function sanitize(ch) {
-  const nome = String(ch.nome || '').trim().slice(0, 200);
-  const categoria = String(ch.categoria || 'Geral').trim().slice(0, 100);
-  const imagem = String(ch.imagem || '').trim().slice(0, 2000);
-  const iframe = String(ch.iframe || '').trim().slice(0, 20000);
-  const parental = ch.parental === true || ch.parental === 'true' || ch.parental === 1;
-  const parental_senha = parental ? String(ch.parental_senha || '').slice(0, 100) : '';
-  return { nome, categoria, imagem, iframe, parental, parental_senha };
+  return {
+    nome: String(ch.nome || '').trim().slice(0, 200),
+    categoria: String(ch.categoria || 'Geral').trim().slice(0, 100),
+    imagem: String(ch.imagem || '').trim().slice(0, 2000),
+    iframe: String(ch.iframe || '').trim().slice(0, 20000),
+    parental: ch.parental === true || ch.parental === 'true' || ch.parental === 1,
+    parental_senha: ch.parental === true ? String(ch.parental_senha || '').slice(0, 100) : ''
+  };
 }
 
 module.exports = async function handler(req, res) {
@@ -31,8 +32,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      const auth = requireAuth(req, res);
-      if (!auth) return;
+      if (!requireAuth(req, res)) return;
 
       let body = req.body;
       if (typeof body === 'string') { try { body = JSON.parse(body); } catch { body = null; } }
@@ -43,7 +43,8 @@ module.exports = async function handler(req, res) {
 
       if (action === 'add') {
         const ch = sanitize(body.canal || {});
-        if (!ch.nome || !ch.iframe) return res.status(400).json({ error: 'Nome e iframe são obrigatórios.' });
+        if (!ch.nome) return res.status(400).json({ error: 'Nome é obrigatório.' });
+        if (!ch.iframe) return res.status(400).json({ error: 'Iframe é obrigatório.' });
         ch.id = newId();
         channels.push(ch);
         await saveAll(channels);
@@ -55,7 +56,8 @@ module.exports = async function handler(req, res) {
         const idx = channels.findIndex(c => c.id === id);
         if (idx < 0) return res.status(404).json({ error: 'Canal não encontrado.' });
         const ch = sanitize(body.canal || {});
-        if (!ch.nome || !ch.iframe) return res.status(400).json({ error: 'Nome e iframe são obrigatórios.' });
+        if (!ch.nome) return res.status(400).json({ error: 'Nome é obrigatório.' });
+        if (!ch.iframe) return res.status(400).json({ error: 'Iframe é obrigatório.' });
         ch.id = id;
         channels[idx] = ch;
         await saveAll(channels);
@@ -70,18 +72,12 @@ module.exports = async function handler(req, res) {
         return res.status(200).json({ success: true });
       }
 
-      if (action === 'replace_all') {
-        const list = Array.isArray(body.canais) ? body.canais : [];
-        const cleaned = list.map(c => { const s = sanitize(c); s.id = c.id || newId(); return s; });
-        await saveAll(cleaned);
-        return res.status(200).json({ success: true, total: cleaned.length });
-      }
-
       return res.status(400).json({ error: 'Ação desconhecida.' });
     }
 
     return res.status(405).json({ error: 'Método não permitido.' });
   } catch (e) {
+    console.error('[api/canais] erro:', e);
     return res.status(500).json({ error: e.message || 'Erro interno.' });
   }
 };
