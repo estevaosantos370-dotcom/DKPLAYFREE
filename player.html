@@ -24,7 +24,6 @@ function err(t) { msg.textContent = t; msg.style.display = 'block'; }
 if (!raw) {
   err('URL do stream não fornecida');
 } else {
-  // Sempre via proxy, porque a página é HTTPS e o stream costuma ser HTTP
   const proxy = '/api/proxy?url=' + encodeURIComponent(raw);
   const isHls = /\.m3u8(\?|$)/i.test(raw);
 
