@@ -1,31 +1,51 @@
 // api/jogos-ao-vivo.js
 module.exports = async function handler(req, res) {
-  // Cache de 1 minuto para evitar bloqueio da API
   res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
   res.setHeader('Access-Control-Allow-Origin', '*');
 
-  // Pega o token do painel da Vercel ou usa o que estava na sua imagem como fallback
+  // Pega o token da Vercel ou usa o fallback
   const TOKEN = process.env.FUTPLAY_TOKEN || 'FUT-3E9888A417A97E5205AC279053813F63F93';
   const API_URL = 'https://fut.nxcloud.site/ao-vivo';
 
   try {
+    // Enviando o token na URL e no Header por garantia
     const response = await fetch(`${API_URL}?token=${TOKEN}`, {
-      headers: { Authorization: `Bearer ${TOKEN}` }
+      method: 'GET',
+      headers: { 
+        'Authorization': `Bearer ${TOKEN}`,
+        'Accept': 'application/json'
+      }
     });
 
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Erro na API de jogos.' });
+    // Pega o texto da resposta para analisarmos o erro
+    const text = await response.text();
+    let data;
+    
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      // Se não for JSON, significa que a API bloqueou e devolveu um HTML
+      return res.status(502).json({ 
+        error: 'A API não retornou JSON (provavelmente bloqueou a Vercel ou o token expirou).', 
+        detalhes: text.substring(0, 200) 
+      });
     }
 
-    const data = await response.json();
+    // Se a resposta for de erro (ex: 401, 403, 429)
+    if (!response.ok) {
+      return res.status(response.status).json({ 
+        error: `API externa respondeu HTTP ${response.status}`, 
+        detalhes: data 
+      });
+    }
 
-    // Junta os jogos que estão rolando AGORA com os que VÃO COMEÇAR
+    // Junta os jogos ao vivo e os próximos
     const aoVivo = (data.ao_vivo || []).map(jogo => ({ ...jogo, status_visual: 'ao_vivo' }));
     const proximos = (data.proximos || []).map(jogo => ({ ...jogo, status_visual: 'agendado' }));
     
     const todosJogos = [...aoVivo, ...proximos];
 
-    // Formata os dados para o frontend
+    // Formata a lista
     const jogos = todosJogos.map(jogo => ({
       id: `${jogo.time_casa}-${jogo.time_fora}-${jogo.hora}`,
       liga: jogo.liga,
@@ -43,7 +63,6 @@ module.exports = async function handler(req, res) {
 
     res.status(200).json({ jogos });
   } catch (error) {
-    console.error('[jogos-ao-vivo] erro:', error);
-    res.status(502).json({ error: 'Falha ao buscar jogos ao vivo.' });
+    res.status(500).json({ error: 'Erro interno no servidor', detalhes: error.message });
   }
 };
