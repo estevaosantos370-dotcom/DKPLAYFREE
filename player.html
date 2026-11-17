@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Player</title>
+<style>
+html,body{margin:0;padding:0;height:100%;background:#000;overflow:hidden}
+video{width:100vw;height:100vh;background:#000;display:block}
+.msg{color:#fff;text-align:center;padding:20px;font-family:sans-serif;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);border-radius:8px;max-width:90%}
+</style>
+</head>
+<body>
+<video id="video" controls autoplay playsinline></video>
+<div id="msg" class="msg" style="display:none"></div>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<script>
+const p = new URLSearchParams(location.search);
+const raw = p.get('url') || '';
+const video = document.getElementById('video');
+const msg = document.getElementById('msg');
+function err(t) { msg.textContent = t; msg.style.display = 'block'; }
+
+if (!raw) {
+  err('URL do stream não fornecida');
+} else {
+  // Sempre via proxy, porque a página é HTTPS e o stream costuma ser HTTP
+  const proxy = '/api/proxy?url=' + encodeURIComponent(raw);
+  const isHls = /\.m3u8(\?|$)/i.test(raw);
+
+  if (isHls) {
+    if (window.Hls && Hls.isSupported()) {
+      const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+      hls.loadSource(proxy);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+      hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) err('Erro HLS: ' + d.details); });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = proxy;
+      video.play().catch(() => {});
+    } else {
+      err('Navegador não suporta HLS');
+    }
+  } else {
+    video.src = proxy;
+    video.play().catch(() => {});
+  }
+}
+</script>
+</body>
+</html>
