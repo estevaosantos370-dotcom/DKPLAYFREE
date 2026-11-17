@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Dark Play - Canais ao Vivo</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--red:#ff0000;--bg:#000;--card:#111;--border:#222;--muted:#888}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+.container{max-width:1300px;margin:0 auto;padding:15px;width:100%;flex:1}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:15px}
+.logo{font-size:24px;font-weight:900;font-style:italic}
+.logo .r{color:var(--red)}
+.logo .w{color:#fff}
+.free{background:rgba(255,0,0,.15);color:var(--red);padding:3px 8px;border-radius:5px;font-size:11px;margin-left:5px}
+.nav{display:flex;gap:10px}
+.nav a{color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:8px;font-size:14px;display:flex;align-items:center;gap:6px}
+.nav a:hover{color:#fff;background:#1a1a1a}
+.nav a.active{color:var(--red);background:rgba(255,0,0,.1)}
+.user{font-size:12px;color:var(--muted);padding:5px 12px;background:var(--card);border-radius:20px}
+.main-title{text-align:center;font-size:28px;font-weight:bold;margin:10px 0 5px;font-style:italic}
+.main-title .r{color:var(--red)}
+.subtitle{text-align:center;color:var(--red);font-size:13px;margin-bottom:20px;letter-spacing:1px}
+.search{width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;margin-bottom:15px}
+.search:focus{outline:none;border-color:var(--red)}
+.player-wrap{background:#000;border:2px solid var(--red);border-radius:8px;overflow:hidden;margin:15px 0;scroll-margin-top:20px}
+.player-head{background:var(--card);padding:10px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.live-badge{background:var(--red);color:#fff;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:bold}
+.current-name{color:var(--red);font-weight:bold;font-size:14px}
+.player-container{width:100%;aspect-ratio:16/9;background:#000;position:relative}
+.player-container iframe{width:100%!important;height:100%!important;border:0;display:block}
+.player-empty{display:flex;align-items:center;justify-content:center;height:100%;color:#444;font-size:14px;gap:10px}
+.channels-head{display:flex;justify-content:space-between;align-items:center;margin:25px 0 15px}
+.channels-head h2{font-size:18px}
+.channels-head h2 span{color:var(--red)}
+.channels-head .count{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:40px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:.2s;position:relative}
+.card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,0,0,.2)}
+.card.active{border:2px solid var(--red)}
+.card-img{aspect-ratio:1/1;background:linear-gradient(145deg,#5a0000,#8b0000);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block}
+.card-img i{font-size:36px;color:#fff;opacity:.7}
+.lock-badge{position:absolute;top:6px;right:6px;background:#FFC107;color:#000;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:1px solid #000;z-index:2}
+.card-info{padding:10px;text-align:center;background:#161616}
+.card-name{font-weight:bold;font-size:13px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-cat{color:var(--muted);font-size:10px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.watch-btn{background:var(--red);color:#fff;border:0;padding:5px 0;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;width:100%;transition:.2s}
+.watch-btn:hover{background:#cc0000}
+.empty{grid-column:1/-1;text-align:center;padding:50px;color:var(--muted);background:var(--card);border-radius:8px}
+.loading{grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)}
+.footer{background:var(--card);border-top:1px solid var(--border);padding:20px;text-align:center;color:#666;font-size:12px;margin-top:30px}
+.footer .r{color:var(--red)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;z-index:2000;padding:15px}
+.modal.show{display:flex}
+.modal-box{background:var(--card);border:2px solid var(--red);border-radius:12px;padding:25px;width:100%;max-width:350px;text-align:center}
+.modal-box h3{color:var(--red);margin-bottom:10px}
+.modal-box p{color:var(--muted);font-size:13px;margin-bottom:15px}
+.modal-box input{width:100%;padding:12px;background:#222;border:1px solid #333;color:#fff;border-radius:4px;margin-bottom:12px;font-size:15px;text-align:center}
+.modal-box input:focus{outline:none;border-color:var(--red)}
+.modal-box button{width:100%;padding:12px;border:0;border-radius:4px;font-weight:bold;cursor:pointer;font-size:14px;margin-bottom:8px}
+.modal-box .primary{background:var(--red);color:#fff}
+.modal-box .primary:hover{background:#cc0000}
+.modal-box .cancel{background:#333;color:#fff}
+.error{color:#ff4444;font-size:12px;margin-top:8px;display:none}
+@media(max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo"><span class="r">D</span><span class="w">ark</span> <span class="r">P</span><span class="w">lay</span> <span class="free">FREE</span></div>
+    <nav class="nav">
+      <a href="/" class="active"><i class="fas fa-tv"></i> TV Ao Vivo</a>
+      <a href="/admin.html"><i class="fas fa-cog"></i> Admin</a>
+    </nav>
+    <div class="user"><i class="fas fa-user"></i> <span id="userName">Visitante</span></div>
+  </header>
+
+  <div class="main-title"><span class="r">Dark</span> Play FREE</div>
+  <div class="subtitle">⋆｡°✩ CANAIS AO VIVO ✩°｡⋆</div>
+
+  <input type="text" class="search" id="search" placeholder="🔍 Buscar canal..." oninput="applyFilters()">
+
+  <div class="player-wrap" id="playerWrap">
+    <div class="player-head">
+      <span class="live-badge">🔴 AO VIVO</span>
+      <span class="current-name" id="currentName">Selecione um canal</span>
+    </div>
+    <div class="player-container" id="player">
+      <div class="player-empty"><i class="fas fa-tv"></i><span>Selecione um canal abaixo</span></div>
+    </div>
+  </div>
+
+  <div class="channels-head">
+    <h2>Canais <span>Disponíveis</span></h2>
+    <div class="count" id="count">0 canais</div>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="loading"><i class="fas fa-circle-notch fa-spin"></i> Carregando canais...</div>
+  </div>
+</div>
+
+<footer class="footer"><i class="fas fa-tv r"></i> Dark Play FREE © 2026</footer>
+
+<div class="modal" id="parentalModal">
+  <div class="modal-box">
+    <h3>🔞 Conteúdo Restrito</h3>
+    <p>Este canal requer senha para acesso</p>
+    <input type="password" id="parentalPassword" placeholder="Digite a senha" onkeypress="if(event.key==='Enter')checkParental()">
+    <button class="primary" onclick="checkParental()">LIBERAR ACESSO</button>
+    <button class="cancel" onclick="closeParental()">CANCELAR</button>
+    <div class="error" id="parentalError">Senha incorreta!</div>
+  </div>
+</div>
+
+<script>
+const UNLOCK_KEY = 'darkplay_unlocked';
+let channels = [];
+let currentIndex = -1;
+let pendingChannel = null;
+
+function getUnlocked() { try { return JSON.parse(localStorage.getItem(UNLOCK_KEY) || '[]'); } catch { return []; } }
+function saveUnlocked(a) { localStorage.setItem(UNLOCK_KEY, JSON.stringify(a)); }
+function isUnlocked(id) { return getUnlocked().includes(id); }
+
+function getUserId() {
+  let id = localStorage.getItem('darkplay_user');
+  if (!id) { id = 'user_' + Math.random().toString(36).slice(2, 10); localStorage.setItem('darkplay_user', id); }
+  return id;
+}
+document.getElementById('userName').textContent = getUserId().slice(0, 8);
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function safeUrl(u) {
+  const s = String(u || '').trim();
+  return /^(https?:|data:image\/)/i.test(s) ? s : '';
+}
+
+async function loadChannels() {
+  try {
+    const res = await fetch('/api/canais', { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    channels = Array.isArray(data.canais) ? data.canais : [];
+    renderGrid();
+  } catch (e) {
+    document.getElementById('grid').innerHTML = '<div class="empty"><i class="fas fa-exclamation-triangle"></i><p>Erro ao carregar canais: ' + escapeHtml(e.message) + '</p></div>';
+  }
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const search = document.getElementById('search').value.toLowerCase().trim();
+
+  const visible = channels.map((c, i) => ({ c, i })).filter(({ c }) => {
+    if (!search) return true;
+    return (c.nome || '').toLowerCase().includes(search) || (c.categoria || '').toLowerCase().includes(search);
+  });
+
+  document.getElementById('count').textContent = visible.length + ' canais';
+
+  if (!visible.length) {
+    grid.innerHTML = '<div class="empty"><i class="fas fa-tv"></i><p>Nenhum canal encontrado</p></div>';
+    return;
+  }
+
+  grid.innerHTML = visible.map(({ c, i }) => {
+    const locked = c.parental === true && !isUnlocked(c.id);
+    const img = safeUrl(c.imagem);
+    return `
+      <div class="card ${i === currentIndex ? 'active' : ''}" data-idx="${i}" onclick="selectChannel(${i})">
+        <div class="card-img">
+          ${img ? `<img src="${escapeHtml(img)}" alt="" onerror="this.style.display='none'">` : '<i class="fas fa-tv"></i>'}
+          ${locked ? '<div class="lock-badge"><i class="fas fa-lock"></i></div>' : ''}
+        </div>
+        <div class="card-info">
+          <div class="card-name">${escapeHtml(c.nome || 'Sem nome')}</div>
+          <div class="card-cat">${escapeHtml(c.categoria || 'Geral')}</div>
+          <button class="watch-btn" onclick="event.stopPropagation();selectChannel(${i})">ASSISTIR</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function applyFilters() { renderGrid(); }
+
+function selectChannel(idx) {
+  if (idx < 0 || idx >= channels.length) return;
+  const ch = channels[idx];
+  if (ch.parental === true && !isUnlocked(ch.id)) {
+    pendingChannel = idx;
+    document.getElementById('parentalPassword').value = '';
+    document.getElementById('parentalError').style.display = 'none';
+    document.getElementById('parentalModal').classList.add('show');
+    setTimeout(() => document.getElementById('parentalPassword').focus(), 50);
+    return;
+  }
+  playChannel(idx);
+}
+
+function playChannel(idx) {
+  const ch = channels[idx];
+  if (!ch) return;
+  currentIndex = idx;
+  document.getElementById('currentName').textContent = ch.nome || 'Canal';
+  document.getElementById('player').innerHTML = ch.iframe || '<div class="player-empty">Canal sem embed configurado</div>';
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+  const active = document.querySelector(`.card[data-idx="${idx}"]`);
+  if (active) active.classList.add('active');
+  document.getElementById('playerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function checkParental() {
+  if (pendingChannel === null) return;
+  const ch = channels[pendingChannel];
+  const pwd = document.getElementById('parentalPassword').value;
+  if (pwd === (ch.parental_senha || '')) {
+    const u = getUnlocked();
+    if (!u.includes(ch.id)) u.push(ch.id);
+    saveUnlocked(u);
+    const idx = pendingChannel;
+    closeParental();
+    playChannel(idx);
+  } else {
+    document.getElementById('parentalError').style.display = 'block';
+    document.getElementById('parentalPassword').value = '';
+    document.getElementById('parentalPassword').focus();
+  }
+}
+
+function closeParental() {
+  document.getElementById('parentalModal').classList.remove('show');
+  pendingChannel = null;
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeParental(); });
+document.getElementById('parentalModal').addEventListener('click', e => {
+  if (e.target.id === 'parentalModal') closeParental();
+});
+
+loadChannels();
+</script>
+</body>
+</html>
