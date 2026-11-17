@@ -3,98 +3,269 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#000000">
-<title>Dark Play - Canais ao Vivo</title>
+<meta name="theme-color" content="#0a0f18">
+<title>Dark Play - Ao Vivo</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{--red:#ff0000;--bg:#000;--card:#111;--border:#222;--muted:#888}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column}
-.container{max-width:1300px;margin:0 auto;padding:15px;width:100%;flex:1}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:15px}
-.logo{font-size:24px;font-weight:900;font-style:italic}
-.logo .r{color:var(--red)}
-.logo .w{color:#fff}
-.free{background:rgba(255,0,0,.15);color:var(--red);padding:3px 8px;border-radius:5px;font-size:11px;margin-left:5px}
-.nav{display:flex;gap:10px}
-.nav a{color:var(--muted);text-decoration:none;padding:8px 14px;border-radius:8px;font-size:14px;display:flex;align-items:center;gap:6px}
-.nav a:hover{color:#fff;background:#1a1a1a}
-.nav a.active{color:var(--red);background:rgba(255,0,0,.1)}
-.user{font-size:12px;color:var(--muted);padding:5px 12px;background:var(--card);border-radius:20px}
-.main-title{text-align:center;font-size:28px;font-weight:bold;margin:10px 0 5px;font-style:italic}
-.main-title .r{color:var(--red)}
-.subtitle{text-align:center;color:var(--red);font-size:13px;margin-bottom:20px;letter-spacing:1px}
-.search{width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:#fff;font-size:14px;margin-bottom:15px}
-.search:focus{outline:none;border-color:var(--red)}
-.player-wrap{background:#000;border:2px solid var(--red);border-radius:8px;overflow:hidden;margin:15px 0;scroll-margin-top:20px}
-.player-head{background:var(--card);padding:10px 15px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
-.live-badge{background:var(--red);color:#fff;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:bold}
-.current-name{color:var(--red);font-weight:bold;font-size:14px}
-.player-container{width:100%;aspect-ratio:16/9;background:#000;position:relative}
-.player-container iframe{width:100%!important;height:100%!important;border:0;display:block}
-.player-empty{display:flex;align-items:center;justify-content:center;height:100%;color:#444;font-size:14px;gap:10px}
-.channels-head{display:flex;justify-content:space-between;align-items:center;margin:25px 0 15px}
-.channels-head h2{font-size:18px}
-.channels-head h2 span{color:var(--red)}
-.channels-head .count{color:var(--muted);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:40px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:.2s;position:relative}
-.card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,0,0,.2)}
-.card.active{border:2px solid var(--red)}
-.card-img{aspect-ratio:1/1;background:linear-gradient(145deg,#5a0000,#8b0000);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.card-img img{width:100%;height:100%;object-fit:cover;display:block}
-.card-img i{font-size:36px;color:#fff;opacity:.7}
-.lock-badge{position:absolute;top:6px;right:6px;background:#FFC107;color:#000;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:1px solid #000;z-index:2}
-.card-info{padding:10px;text-align:center;background:#161616}
-.card-name{font-weight:bold;font-size:13px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-cat{color:var(--muted);font-size:10px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.watch-btn{background:var(--red);color:#fff;border:0;padding:5px 0;border-radius:4px;font-size:11px;font-weight:500;cursor:pointer;width:100%;transition:.2s}
-.watch-btn:hover{background:#cc0000}
-.empty{grid-column:1/-1;text-align:center;padding:50px;color:var(--muted);background:var(--card);border-radius:8px}
-.loading{grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)}
-.footer{background:var(--card);border-top:1px solid var(--border);padding:20px;text-align:center;color:#666;font-size:12px;margin-top:30px}
-.footer .r{color:var(--red)}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;z-index:2000;padding:15px}
-.modal.show{display:flex}
-.modal-box{background:var(--card);border:2px solid var(--red);border-radius:12px;padding:25px;width:100%;max-width:350px;text-align:center}
-.modal-box h3{color:var(--red);margin-bottom:10px}
-.modal-box p{color:var(--muted);font-size:13px;margin-bottom:15px}
-.modal-box input{width:100%;padding:12px;background:#222;border:1px solid #333;color:#fff;border-radius:4px;margin-bottom:12px;font-size:15px;text-align:center}
-.modal-box input:focus{outline:none;border-color:var(--red)}
-.modal-box button{width:100%;padding:12px;border:0;border-radius:4px;font-weight:bold;cursor:pointer;font-size:14px;margin-bottom:8px}
-.modal-box .primary{background:var(--red);color:#fff}
-.modal-box .primary:hover{background:#cc0000}
-.modal-box .cancel{background:#333;color:#fff}
-.error{color:#ff4444;font-size:12px;margin-top:8px;display:none}
-@media(max-width:600px){.grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}}
+:root {
+  --red: #ff0000;
+  --blue: #2563eb;
+  --bg: #0a0f18;
+  --card: #151b2b;
+  --border: #1e293b;
+  --muted: #94a3b8;
+  --text: #f8fafc;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container { max-width: 1300px; margin: 0 auto; padding: 15px; width: 100%; flex: 1; }
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.logo { font-size: 26px; font-weight: 900; font-style: italic; letter-spacing: -0.5px; }
+.logo .r { color: var(--red); }
+.logo .w { color: #fff; }
+.user { font-size: 12px; color: var(--muted); padding: 6px 14px; background: var(--card); border-radius: 20px; border: 1px solid var(--border); }
+
+/* Jogos Ao Vivo (Carrossel) */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.section-header::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background: var(--red);
+  border-radius: 2px;
+}
+.section-header h2 { font-size: 18px; color: #fff; }
+.section-header span { color: var(--muted); font-size: 14px; font-weight: normal; }
+
+.games-carousel {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+  scrollbar-width: none; /* Firefox */
+}
+.games-carousel::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+
+.game-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+.game-card:hover { transform: translateY(-2px); border-color: #334155; }
+
+.game-info {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.game-info i { color: var(--muted); }
+
+.game-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 15px;
+}
+.team { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+.team img { width: 40px; height: 40px; object-fit: contain; }
+.team span { font-size: 13px; font-weight: 600; text-align: center; }
+.game-vs { color: var(--muted); font-size: 12px; font-weight: bold; }
+
+.game-btn {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+.game-btn:hover { background: #1d4ed8; }
+
+/* Player Area */
+.player-wrap {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  border: 1px solid var(--border);
+  scroll-margin-top: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.player-head {
+  background: var(--card);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.current-name { color: #fff; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+.live-badge { background: var(--red); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+.refresh-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.refresh-btn:hover { background: #1e293b; color: #fff; }
+
+.player-container { width: 100%; aspect-ratio: 16/9; background: #000; position: relative; }
+.player-container iframe { width: 100% !important; height: 100% !important; border: 0; display: block; }
+.player-empty { display: flex; align-items: center; justify-content: center; height: 100%; color: #334155; font-size: 15px; flex-direction: column; gap: 10px; }
+
+/* Canais Grid */
+.channels-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.channels-head h2 { font-size: 18px; }
+.channels-head h2 span { color: var(--red); }
+.channels-head .count { color: var(--muted); font-size: 13px; }
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.search-input:focus { outline: none; border-color: var(--blue); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 15px; margin-bottom: 40px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.2s;
+  position: relative;
+}
+.card:hover { border-color: var(--blue); transform: translateY(-2px); }
+.card.active { border: 2px solid var(--blue); }
+.card-img { aspect-ratio: 1/1; background: #1e293b; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-img i { font-size: 36px; color: #334155; }
+.lock-badge { position: absolute; top: 8px; right: 8px; background: #FFC107; color: #000; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; z-index: 2; }
+.card-info { padding: 12px; text-align: center; }
+.card-name { font-weight: bold; font-size: 13px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-cat { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
+
+.empty { grid-column: 1/-1; text-align: center; padding: 50px; color: var(--muted); background: var(--card); border-radius: 10px; }
+.loading { grid-column: 1/-1; text-align: center; padding: 30px; color: var(--muted); }
+
+/* Modal Parental */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.9); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 15px; }
+.modal.show { display: flex; }
+.modal-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; width: 100%; max-width: 350px; text-align: center; }
+.modal-box h3 { color: #fff; margin-bottom: 10px; }
+.modal-box p { color: var(--muted); font-size: 13px; margin-bottom: 15px; }
+.modal-box input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid var(--border); color: #fff; border-radius: 6px; margin-bottom: 12px; font-size: 15px; text-align: center; }
+.modal-box input:focus { outline: none; border-color: var(--blue); }
+.modal-box button { width: 100%; padding: 12px; border: 0; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 8px; }
+.modal-box .primary { background: var(--blue); color: #fff; }
+.modal-box .cancel { background: #334155; color: #fff; }
+.error { color: #ef4444; font-size: 12px; margin-top: 8px; display: none; }
+
+.footer { background: var(--card); border-top: 1px solid var(--border); padding: 25px; text-align: center; color: var(--muted); font-size: 12px; margin-top: auto; }
+
+@media(max-width: 600px) {
+  .grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 10px; }
+  .game-card { min-width: 220px; }
+}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <div class="logo"><span class="r">D</span><span class="w">ark</span> <span class="r">P</span><span class="w">lay</span> <span class="free">FREE</span></div>
-    <nav class="nav">
-      <a href="/" class="active"><i class="fas fa-tv"></i> TV Ao Vivo</a>
-      <a href="/admin.html"><i class="fas fa-cog"></i> Admin</a>
-    </nav>
+    <div class="logo"><span class="r">D</span><span class="w">ark</span> <span class="r">P</span><span class="w">lay</span></div>
     <div class="user"><i class="fas fa-user"></i> <span id="userName">Visitante</span></div>
   </header>
 
-  <div class="main-title"><span class="r">Dark</span> Play FREE</div>
-  <div class="subtitle">⋆｡°✩ CANAIS AO VIVO ✩°｡⋆</div>
+  <!-- Jogos Ao Vivo (Preenchido dinamicamente pelos canais) -->
+  <div id="gamesSection" style="display:none;">
+    <div class="section-header">
+      <h2>Jogos Ao Vivo</h2> <span id="gamesCount">(0)</span>
+    </div>
+    <div class="games-carousel" id="gamesCarousel"></div>
+  </div>
 
-  <input type="text" class="search" id="search" placeholder="🔍 Buscar canal..." oninput="applyFilters()">
+  <div class="search-input-container">
+    <input type="text" class="search-input" id="search" placeholder="🔍 Buscar canal..." oninput="renderGrid()">
+  </div>
 
+  <!-- Player -->
   <div class="player-wrap" id="playerWrap">
     <div class="player-head">
-      <span class="live-badge">🔴 AO VIVO</span>
-      <span class="current-name" id="currentName">Selecione um canal</span>
+      <div class="current-name">
+        <span class="live-badge"><i class="fas fa-circle"></i> AO VIVO</span>
+        <span id="currentName">Selecione um canal</span>
+      </div>
+      <button class="refresh-btn" onclick="reloadPlayer()">
+        <i class="fas fa-sync-alt"></i> Atualizar
+      </button>
     </div>
     <div class="player-container" id="player">
-      <div class="player-empty"><i class="fas fa-tv"></i><span>Selecione um canal abaixo</span></div>
+      <div class="player-empty">
+        <i class="fas fa-tv fa-3x"></i>
+        <span>Selecione um canal abaixo</span>
+      </div>
     </div>
   </div>
 
+  <!-- Canais -->
   <div class="channels-head">
     <h2>Canais <span>Disponíveis</span></h2>
     <div class="count" id="count">0 canais</div>
@@ -105,7 +276,7 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   </div>
 </div>
 
-<footer class="footer"><i class="fas fa-tv r"></i> Dark Play FREE © 2026</footer>
+<footer class="footer"><i class="fas fa-tv" style="color:var(--red)"></i> Dark Play © 2026</footer>
 
 <div class="modal" id="parentalModal">
   <div class="modal-box">
@@ -124,17 +295,7 @@ let channels = [];
 let currentIndex = -1;
 let pendingChannel = null;
 
-function getUnlocked() { try { return JSON.parse(localStorage.getItem(UNLOCK_KEY) || '[]'); } catch { return []; } }
-function saveUnlocked(a) { localStorage.setItem(UNLOCK_KEY, JSON.stringify(a)); }
-function isUnlocked(id) { return getUnlocked().includes(id); }
-
-function getUserId() {
-  let id = localStorage.getItem('darkplay_user');
-  if (!id) { id = 'user_' + Math.random().toString(36).slice(2, 10); localStorage.setItem('darkplay_user', id); }
-  return id;
-}
-document.getElementById('userName').textContent = getUserId().slice(0, 8);
-
+// Funções Utilitárias
 function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
@@ -142,19 +303,78 @@ function safeUrl(u) {
   const s = String(u || '').trim();
   return /^(https?:|data:image\/)/i.test(s) ? s : '';
 }
+function getUnlocked() { try { return JSON.parse(localStorage.getItem(UNLOCK_KEY) || '[]'); } catch { return []; } }
+function saveUnlocked(a) { localStorage.setItem(UNLOCK_KEY, JSON.stringify(a)); }
+function isUnlocked(id) { return getUnlocked().includes(id); }
 
+// ID do usuário
+let uid = localStorage.getItem('darkplay_user');
+if (!uid) { uid = 'user_' + Math.random().toString(36).slice(2, 8); localStorage.setItem('darkplay_user', uid); }
+document.getElementById('userName').textContent = uid;
+
+// Carregar Canais
 async function loadChannels() {
   try {
     const res = await fetch('/api/canais', { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     channels = Array.isArray(data.canais) ? data.canais : [];
-    renderGrid();
+    
+    renderGames(); // Preenche a seção "Jogos Ao Vivo"
+    renderGrid();  // Preenche a lista de canais
+    
+    // Auto-play do primeiro canal se existir
+    if (channels.length > 0 && currentIndex === -1) {
+      setTimeout(() => playChannel(0, false), 500); // false = não scroll imediato para não assustar
+    }
   } catch (e) {
-    document.getElementById('grid').innerHTML = '<div class="empty"><i class="fas fa-exclamation-triangle"></i><p>Erro ao carregar canais: ' + escapeHtml(e.message) + '</p></div>';
+    document.getElementById('grid').innerHTML = '<div class="empty"><i class="fas fa-exclamation-triangle"></i><p>Erro: ' + escapeHtml(e.message) + '</p></div>';
   }
 }
 
+// Renderizar a seção de "Jogos Ao Vivo" (usa os canais como base)
+function renderGames() {
+  const section = document.getElementById('gamesSection');
+  const carousel = document.getElementById('gamesCarousel');
+  
+  if (!channels.length) { section.style.display = 'none'; return; }
+
+  // Filtra canais de esporte, se não tiver, pega os 5 primeiros
+  let gamesList = channels.filter(c => (c.categoria || '').toLowerCase().includes('esporte') || (c.categoria || '').toLowerCase().includes('jogo'));
+  if (gamesList.length === 0) gamesList = channels.slice(0, 5);
+
+  document.getElementById('gamesCount').textContent = `(${gamesList.length})`;
+  
+  carousel.innerHTML = gamesList.map((c, i) => {
+    // Como não temos API de times, geramos um layout visual simulando o da sua imagem
+    const teamA = c.nome.split(' ')[0] || 'Time A';
+    const teamB = c.nome.split(' ')[1] || 'Time B';
+    
+    return `
+      <div class="game-card" onclick="selectChannel(${channels.indexOf(c)})">
+        <div class="game-info">
+          <i class="fas fa-clock"></i> Hoje · 18:45 &nbsp;|&nbsp; <i class="fas fa-trophy"></i> ${escapeHtml(c.categoria || 'Campeonato')}
+        </div>
+        <div class="game-teams">
+          <div class="team">
+            <div style="width:40px;height:40px;background:#334155;border-radius:50%;display:flex;align-items:center;justify-content:center;"><i class="fas fa-shield-alt" style="color:#fff"></i></div>
+            <span>${escapeHtml(teamA)}</span>
+          </div>
+          <div class="game-vs">VS</div>
+          <div class="team">
+            <div style="width:40px;height:40px;background:#334155;border-radius:50%;display:flex;align-items:center;justify-content:center;"><i class="fas fa-shield-alt" style="color:#fff"></i></div>
+            <span>${escapeHtml(teamB)}</span>
+          </div>
+        </div>
+        <button class="game-btn"><i class="fas fa-play"></i> ASSISTIR</button>
+      </div>
+    `;
+  }).join('');
+  
+  section.style.display = 'block';
+}
+
+// Renderizar Grid de Canais
 function renderGrid() {
   const grid = document.getElementById('grid');
   const search = document.getElementById('search').value.toLowerCase().trim();
@@ -183,18 +403,17 @@ function renderGrid() {
         <div class="card-info">
           <div class="card-name">${escapeHtml(c.nome || 'Sem nome')}</div>
           <div class="card-cat">${escapeHtml(c.categoria || 'Geral')}</div>
-          <button class="watch-btn" onclick="event.stopPropagation();selectChannel(${i})">ASSISTIR</button>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function applyFilters() { renderGrid(); }
-
+// Selecionar Canal (verifica parental e vai pro player)
 function selectChannel(idx) {
   if (idx < 0 || idx >= channels.length) return;
   const ch = channels[idx];
+  
   if (ch.parental === true && !isUnlocked(ch.id)) {
     pendingChannel = idx;
     document.getElementById('parentalPassword').value = '';
@@ -203,32 +422,51 @@ function selectChannel(idx) {
     setTimeout(() => document.getElementById('parentalPassword').focus(), 50);
     return;
   }
-  playChannel(idx);
+  playChannel(idx, true); // true = fazer scroll suave até o player
 }
 
-function playChannel(idx) {
+// Tocar Canal
+function playChannel(idx, scroll = true) {
   const ch = channels[idx];
   if (!ch) return;
+  
   currentIndex = idx;
   document.getElementById('currentName').textContent = ch.nome || 'Canal';
+  
+  // Injeta o iframe
   document.getElementById('player').innerHTML = ch.iframe || '<div class="player-empty">Canal sem embed configurado</div>';
+  
+  // Atualiza classes visuais
   document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
   const active = document.querySelector(`.card[data-idx="${idx}"]`);
   if (active) active.classList.add('active');
-  document.getElementById('playerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  
+  // Rola suavemente para o player
+  if (scroll) {
+    document.getElementById('playerWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
+// Recarregar o iframe manualmente (botão de refresh no player)
+function reloadPlayer() {
+  if (currentIndex !== -1) {
+    playChannel(currentIndex, false);
+  }
+}
+
+// Lógica Parental
 function checkParental() {
   if (pendingChannel === null) return;
   const ch = channels[pendingChannel];
   const pwd = document.getElementById('parentalPassword').value;
+  
   if (pwd === (ch.parental_senha || '')) {
     const u = getUnlocked();
     if (!u.includes(ch.id)) u.push(ch.id);
     saveUnlocked(u);
     const idx = pendingChannel;
     closeParental();
-    playChannel(idx);
+    playChannel(idx, true); // toca e rola
   } else {
     document.getElementById('parentalError').style.display = 'block';
     document.getElementById('parentalPassword').value = '';
@@ -241,11 +479,13 @@ function closeParental() {
   pendingChannel = null;
 }
 
+// Eventos
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeParental(); });
 document.getElementById('parentalModal').addEventListener('click', e => {
   if (e.target.id === 'parentalModal') closeParental();
 });
 
+// Iniciar
 loadChannels();
 </script>
 </body>
