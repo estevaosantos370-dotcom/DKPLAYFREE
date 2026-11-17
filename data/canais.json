@@ -4,7 +4,7 @@
     "nome": "Exemplo YouTube",
     "categoria": "Exemplos",
     "imagem": "",
-    "iframe": "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/dQw4w9WgXcQ\" frameborder=\"0\" allowfullscreen></iframe>",
+    "iframe": "<iframe src="player.php?url=http%3A%2F%2Fmeucanal.xyz%3A8880%2Flive%2F03557535%2F14484280%2F308924.m3u8" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>",
     "parental": false,
     "parental_senha": ""
   }
