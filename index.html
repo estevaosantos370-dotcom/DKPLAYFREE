@@ -6,6 +6,24 @@
 <meta name="theme-color" content="#000000">
 <title>Dark Play - Ao Vivo</title>
 <link rel="icon" href="data:,">
+
+<!-- ===== TAGS DE COMPARTILHAMENTO (OPEN GRAPH) ===== -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://darkplayfree.vercel.app/">
+<meta property="og:title" content="Dark Play - Filmes, Séries e Canais ao Vivo">
+<meta property="og:description" content="Assista aos melhores canais, filmes e séries de forma rápida e gratuita. Jogos ao vivo e muito mais!">
+<meta property="og:image" content="https://darkplayfree.vercel.app/banner.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Tags para Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://darkplayfree.vercel.app/">
+<meta name="twitter:title" content="Dark Play - Filmes, Séries e Canais ao Vivo">
+<meta name="twitter:description" content="Assista aos melhores canais, filmes e séries de forma rápida e gratuita. Jogos ao vivo e muito mais!">
+<meta name="twitter:image" content="https://darkplayfree.vercel.app/banner.jpg">
+<!-- ================================================== -->
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
@@ -104,7 +122,7 @@ header {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 10px;
-  min-width: 300px; /* Aumentado para as informações caberem */
+  min-width: 300px;
   flex-shrink: 0;
   overflow: hidden;
   transition: transform 0.2s;
@@ -119,7 +137,7 @@ header {
   align-items: center;
   gap: 8px;
   color: #ddd;
-  font-size: 13px; /* Fonte maior */
+  font-size: 13px;
   border-bottom: 1px solid var(--border);
   justify-content: space-between;
   background: #161616;
@@ -141,7 +159,7 @@ header {
 
 .game-channel-info {
   text-align: center;
-  font-size: 13px; /* Fonte maior */
+  font-size: 13px;
   color: #ffdfa6;
   background: #241c14;
   padding: 8px 10px;
@@ -265,7 +283,7 @@ header {
 @media(max-width: 600px) {
   .grid { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: 10px; }
   .game-card { min-width: 260px; }
-  .nav-arrow { display: none; } /* Esconde setas no mobile para não atrapalhar o dedo */
+  .nav-arrow { display: none; }
 }
 </style>
 </head>
@@ -283,11 +301,8 @@ header {
     </div>
     
     <div class="games-wrapper">
-      <!-- Setas para navegar -->
       <button class="nav-arrow left" onclick="scrollGames(-1)"><i class="fas fa-chevron-left"></i></button>
-      
       <div class="games-carousel" id="gamesCarousel"></div>
-      
       <button class="nav-arrow right" onclick="scrollGames(1)"><i class="fas fa-chevron-right"></i></button>
     </div>
   </div>
@@ -363,14 +378,13 @@ document.getElementById('userName').textContent = uid;
 function normalizeName(name) {
   return String(name || '')
     .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove acentos
-    .replace(/\b(hd|fhd|uhd|4k|sd|h265|hevc)\b/g, '') // remove tags de qualidade
-    .replace(/[^a-z0-9 ]/g, '') // remove pontuação
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') 
+    .replace(/\b(hd|fhd|uhd|4k|sd|h265|hevc)\b/g, '') 
+    .replace(/[^a-z0-9 ]/g, '') 
     .replace(/\s+/g, ' ')
     .trim();
 }
 
-// Encontra o canal do catálogo que corresponde ao nome vindo da API
 function findCanalByName(apiName) {
   const norm = normalizeName(apiName);
   if (!norm) return null;
@@ -406,7 +420,16 @@ async function loadChannels() {
     const res = await fetch('/api/canais', { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
+    
     channels = Array.isArray(data.canais) ? data.canais : [];
+
+    // ORDENAÇÃO ALFABÉTICA (A-Z)
+    channels.sort((a, b) => {
+      const nomeA = String(a.nome || '').toLowerCase();
+      const nomeB = String(b.nome || '').toLowerCase();
+      return nomeA.localeCompare(nomeB, 'pt-BR');
+    });
+
     renderGrid();
     if (channels.length > 0 && currentIndex === -1) {
       setTimeout(() => playChannel(0, false), 500);
@@ -443,7 +466,7 @@ async function loadJogosAoVivo() {
         canalEncontrado = findCanalByName(nomeCanal);
         if (canalEncontrado) {
           nomeCanalEncontrado = nomeCanal;
-          break;
+          break; 
         }
       }
 
@@ -472,7 +495,6 @@ function renderGames() {
   document.getElementById('gamesCount').textContent = `(${jogosAoVivo.length})`;
 
   carousel.innerHTML = jogosAoVivo.map(jogo => {
-    // Mostra "AO VIVO" com o minuto ou o Horário agendado
     const infoStatus = jogo.status === 'ao_vivo' 
       ? `<span class="live-tag"><i class="fas fa-circle"></i> AO VIVO ${jogo.minuto ? '- ' + escapeHtml(jogo.minuto) : ''}</span>` 
       : `<span><i class="fas fa-clock"></i> ${escapeHtml(jogo.hora)}</span>`;
@@ -509,10 +531,9 @@ function renderGames() {
   section.style.display = 'block';
 }
 
-// NOVO: Função para as setas navegarem no carrossel
 function scrollGames(direction) {
   const carousel = document.getElementById('gamesCarousel');
-  const scrollAmount = 315; // Largura do card (300) + gap (15)
+  const scrollAmount = 315;
   carousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
 }
 
